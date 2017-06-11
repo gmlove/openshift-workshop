@@ -17,14 +17,14 @@ A simple nodejs application
 - Prepare
 
   ```
-  oc login https://10.17.3.32:8443 -u developer
+  oc login https://10.17.3.32:8443 -u developer  # login openshift server
   ```
 
   Passworld: developer
 
   ```
-  oc new-project <your name here>
-  oc status   # verify environment
+  oc new-project <your name here>    # create new project
+  oc status                          # verify environment
   ```
 
   You should see:
@@ -39,7 +39,7 @@ A simple nodejs application
 - Deploy the application
 
 ```
-oc new-app https://github.com/adu-21/nodejs-ex.git -l name=myapp
+oc new-app https://github.com/adu-21/nodejs-ex.git -l name=myapp   # create a new application in your project
 ```
 
 ​	Login the Openshift console : <https://10.17.3.32:8443/console> 
