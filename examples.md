@@ -62,11 +62,51 @@ Add mongodb to the application
 
 ### Deploy a database with persistent volume
 
+Don't need application to be a 12-factor application. Any application can be migrated into openshift in theory.
 
+- Create secrets by `oc create -f mongodb-secrets.json`
+- Check created secrets by `oc get secrets` and `oc describe secret nodejs-ex`
+- Create persistent volumn claim by `oc create -f mongodb-pvc.json` and check by `oc get pvc`
+- Create mongodb deployment config by `oc create -f mongodb-deploy-config.yaml`
+- Create a mongodb service by `oc create -f mongodb-service.yaml`
+- Trigger a deployment for mongodb by `oc rollout latest dc/mongodb`
 
 ### Connect nodejs application to database
 
+- Change deployment config and add environment parameters by `oc edit dc/nodejs-ex`
+```
+        env:
+          - name: DATABASE_SERVICE_NAME
+            value: mongodb
+          - name: MONGODB_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: nodejs-mongo-persistent
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: nodejs-mongo-persistent
+          - name: MONGODB_DATABASE
+            value: sampledb
+          - name: MONGODB_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-admin-password
+                name: nodejs-mongo-persistent
+```
+- Trigger a deployment for nodejs-ex by `oc rollout latest dc/nodejs-ex`
+- Open the application `http://nodejs-ex-test1.<your-ip>.xip.io/` in your browser and you should see `Page view count` is counting
+
+### Using a template to define all the things
+
+- Explore the template [here](https://github.com/gmlove/nodejs-ex/blob/master/openshift/templates/nodejs-mongodb-persistent.json)
+- Create the whole app by `oc new-app -f nodejs-ex/openshift/templates/nodejs-mongodb-persistent.json -p SOURCE_REPOSITORY_URL=https://github.com/<your-github-name>/nodejs-ex.git`
+
 ### Consider HA of the database
+
+- One master with multi slave / multi master
 
 CI/CD for the application
 ----------------------------------
