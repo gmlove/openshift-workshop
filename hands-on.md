@@ -17,14 +17,14 @@ A simple nodejs application
 - Prepare
 
   ```
-  oc login https://10.17.3.32:8443 -u developer  # login openshift server
+  oc login https://10.17.3.32:8443 -u developer  # Login openshift server
   ```
 
   Passworld: developer
 
   ```
-  oc new-project <your name here>    # create new project
-  oc status                          # verify environment
+  oc new-project <your name here>    # Create new project
+  oc status                          # Verify environment
   ```
 
   You should see:
@@ -39,7 +39,7 @@ A simple nodejs application
 - Deploy the application
 
 ```
-oc new-app https://github.com/adu-21/nodejs-ex.git -l name=myapp   # create a new application in your project
+oc new-app https://github.com/adu-21/nodejs-ex.git -l name=myapp   # Create a new application in your project
 ```
 
 ​	Login the Openshift console : <https://10.17.3.32:8443/console> 
@@ -48,7 +48,22 @@ oc new-app https://github.com/adu-21/nodejs-ex.git -l name=myapp   # create a ne
 
 ### Redeploy/Rollback the application when code changes
 
+- Redeploy
+
+  ```
+  Hook ? Update buildConfig ?
+  ```
+
+- Rollback
+
+  ```
+  oc rollback nodejs-ex       # Perform a rollback to the last successfully completed deployment for a deploymentconfig 
+  oc rollback nodejs-ex-1     # Perform a rollback to a specific deployment
+  ```
+
 ### Scale up/down the deployment
+
+
 
 ### Get yourself familiar with the commands and concepts
 
