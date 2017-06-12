@@ -64,6 +64,12 @@ Add mongodb to the application
 
 Don't need application to be a 12-factor application. Any application can be migrated into openshift in theory.
 
+**Through webconsole:**
+
+- Open webconsole and click `add to project` to add mongodb-persistent to this project (remember to input a value for username/password/admin_password)
+
+**Through command line:**
+
 - Create secrets by `oc create -f mongodb-secrets.json`
 - Check created secrets by `oc get secrets` and `oc describe secret nodejs-ex`
 - Create persistent volumn claim by `oc create -f mongodb-pvc.json` and check by `oc get pvc`
@@ -72,6 +78,13 @@ Don't need application to be a 12-factor application. Any application can be mig
 - Trigger a deployment for mongodb by `oc rollout latest dc/mongodb`
 
 ### Connect nodejs application to database
+
+**Through webconsole:**
+
+- Open node-ex deployment config and add four environment `MONGODB_USER` `MONGODB_PASSWORD` `MONGODB_DATABASE` `MONGODB_ADMIN_PASSWORD` with the values you just input, and add environment `DATABASE_SERVICE_NAME=mongodb`. It will trigger a deployment automatically.
+- Open the application `http://nodejs-ex-test1.<your-ip>.xip.io/` in your browser and you should see `Page view count` is counting
+
+**Through command line:**
 
 - Change deployment config and add environment parameters by `oc edit dc/nodejs-ex`
 ```
