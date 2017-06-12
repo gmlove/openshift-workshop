@@ -152,8 +152,26 @@ In openshift you define several resources (API Objects) and you can start an env
 Consider your situation in your organization and choose one properly. We'll try the second one as an example. We'll develop a way to share the image created in the project (can be called as dev project).
 
 - Spend some time thinking about which resources you will need for another environment (ImageStream DeploymentConfig Service Route PersistentVolumeClaim)
-- Export those resources by ``
-
+- Tag all the resources to export by
+```
+oc label dc/mongodb promotion=nodejs-ex
+oc label dc/nodejs-ex promotion=nodejs-ex
+oc label svc/nodejs-ex promotion=nodejs-ex
+oc label svc/mongodb promotion=nodejs-ex
+oc label routes/nodejs-ex promotion=nodejs-ex
+oc label pvc/mongodb promotion=nodejs-ex
+oc label is/nodejs-ex promotion=nodejs-ex
+oc label secret/nodejs-ex promotion=nodejs-ex
+```
+- Export those resources by `oc export dc,svc,routes,pvc,is,secret -l promotion=nodejs-ex -o yaml > exported-for-promotion.yaml`
+- Open the exported file do the below:
+    + Remove image hash tag
+    + Replace all string `test1` to `test1-sys` and we're creating a project named `test1-sys`
+    + Remove `annotations` `volumeName` `status` `creationTimestamp` from `PersistentVolumeClaim`
+- Create a new project by `oc new-project test1-sys`
+- Create resources by `oc create -f exported-for-promotion.yaml`
+- Tag an image from test1 by `oc tag test1/nodejs-ex:latest nodejs-ex:latest`
+- After that you can trigger a deployment, and after it succeeded, you will be able to open the application in `sys` environment
 
 Logging, Monitoring, Debugging
 ----------------------------------
