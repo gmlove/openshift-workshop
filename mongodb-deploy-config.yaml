@@ -45,7 +45,7 @@ spec:
             secretKeyRef:
               key: database-admin-password
               name: nodejs-ex
-        image: centos/mongodb-32-centos7@sha256:aa37993c3be2d4731db79c0c7aba11db3e9352b1adc586c7e9054f57808789c0
+        image: centos/mongodb-32-centos7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
