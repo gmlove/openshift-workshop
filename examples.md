@@ -12,7 +12,7 @@ A simple nodejs application
 ### Deploy the application through webconsole
 
 - Login (create user automatically)
-- Create a simple nodejs application from webconsole
+- Create a simple nodejs application from webconsole (under project `test`)
 - Explore and explain every page: Overview/Application/Deployments/Pods...
 
 ### Deploy the application through commandline
@@ -57,6 +57,7 @@ A simple nodejs application
     + Most oc commands are ways to help simplify changing the resources
     + Actually we can achieve all these by simple `curl` command
 
+
 Add mongodb to the application
 ---------------------------------
 
@@ -66,7 +67,8 @@ Don't need application to be a 12-factor application. Any application can be mig
 
 **Through webconsole:**
 
-- Open webconsole and click `add to project` to add mongodb-persistent to this project (remember to input a value for username/password/admin_password)
+- Open webconsole and switch to `test` project
+- Click `add to project` to add mongodb-persistent to this project (remember to input a value for username/password/admin_password)
 
 **Through command line:**
 
@@ -121,14 +123,37 @@ Don't need application to be a 12-factor application. Any application can be mig
 
 - One master with multi slave / multi master
 
+
 CI/CD for the application
 ----------------------------------
 
-### Integrate Jenkins with openshift
+**Several ways to integrate pipeline:**
 
-### A simple pipeline
+- Keep the original pipeline and artifact repository. Manage your pipeline outside of openshift world. When you need to deploy to an environment, you can trigger a build in openshift to grab your artifact and build an image and deploy it to openshift.
+- Use openshift integrated Jenkins as your pipeline. (heavily customized, with openshift plugin and k8s plugin installed.)
+
+### Integrate Jenkins with the application
+
+- Create a pipeline build config by `oc create -f nodejs-ex-pipeline.yaml`. Openshift will add one route `routes/jenkins` and two services `svc/jenkins` `svc/jenkins` to the project.
+- Run `oc status` to get your dns of the jenkins application. Then you can open it in your browser and do an oauth login with openshift credentials.
+- Trigger a build manually and you can check logs from jenkins. You can also find what is openshift doing by `watch oc get all`
+    + Openshift creates a slave based on the node being used, here it's `nodejs`
+    + Run the build in that slave
+    + The build will simply trigger a build, works just like `oc start-build bc/nodejs-ex`, and then trigger a deployment
 
 ### Multi environment management
+
+In openshift you define several resources (API Objects) and you can start an environment. So multi environment means multi similar resources sets. To manage multi environment, you have many options, such as:
+
+- Via labels and unique naming within a single project
+- Via distinct projects within a cluster
+- Via distinct clusters
+
+Consider your situation in your organization and choose one properly. We'll try the second one as an example. We'll develop a way to share the image created in the project (can be called as dev project).
+
+- Spend some time thinking about which resources you will need for another environment (ImageStream DeploymentConfig Service Route PersistentVolumeClaim)
+- Export those resources by ``
+
 
 Logging, Monitoring, Debugging
 ----------------------------------
