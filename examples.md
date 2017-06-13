@@ -172,11 +172,14 @@ oc label secret/nodejs-ex promotion=nodejs-ex
 - Create resources by `oc create -f exported-for-promotion.yaml`
 - Tag an image from test1 by `oc tag test1/nodejs-ex:latest nodejs-ex:latest`
 - After that you can trigger a deployment, and after it succeeded, you will be able to open the application in `sys` environment
+- Try create a template for these resources and then you can create any new environment with one command
 
 Logging, Monitoring, Debugging
 ----------------------------------
 
 ### Logging aggregation
+
+- EFK solution, check a video [here](https://www.youtube.com/watch?v=RMDX3YC0CSQ)
 
 ### Monitoring solutions
 
@@ -184,4 +187,10 @@ Logging, Monitoring, Debugging
 - dynatrace/coscale/sysdig/appdynamics
 
 ### Debugging
+
+- To monitor the change of resources: `watch oc get all`
+- Check logs of pods: `oc logs po/nodejs-ex-1-0s5sl`
+- Check events: `oc get event`
+- Login to container: `oc rsh po/nodejs-ex-1-0s5sl`
+
 

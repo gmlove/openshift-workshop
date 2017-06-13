@@ -241,23 +241,107 @@ Add mongodb to the application
 CI/CD for the application
 ----------------------------------
 
-### Integrate Jenkins with openshift
+**Several ways to integrate pipeline:**
 
-### A simple pipeline
+- Keep the original pipeline and artifact repository. Manage your pipeline outside of openshift world. When you need to deploy to an environment, you can trigger a build in openshift to grab your artifact and build an image and deploy it to openshift.
+- Use openshift integrated Jenkins as your pipeline. (heavily customized, with openshift plugin and k8s plugin installed.)
+
+### Integrate Jenkins with the application
+
+- Create a pipeline build config
+
+  Create a file named `nodejs-ex-pipeline.yaml` with content:
+
+  ```
+  kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: "nodejs-ex-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: "node('nodejs') {\n  stage 'build'\n  openshiftBuild(buildConfig: 'nodejs-ex', showBuildLogs: 'true')\n  stage 'deploy'\n  openshiftDeploy(deploymentConfig: 'nodejs-ex')\n}\n"
+  ```
+
+  Run command `oc create -f nodejs-ex-pipeline.yaml`. Openshift will add one route `routes/jenkins` and two services `svc/jenkins` `svc/jenkins` to the project.
+
+- Run `oc status` to get your dns of the jenkins application. Then you can open it in your browser and do an oauth login with openshift credentials.
+
+- Trigger a build manually and you can check logs from jenkins. You can also find what is openshift doing by `watch oc get all`
+
+  + Openshift creates a slave based on the node being used, here it's `nodejs`
+
+  + Run the build in that slave
+
+  + The build will simply trigger a build, works just like `oc start-build bc/nodejs-ex`, and then trigger a deployment
+
 
 ### Multi environment management
+
+In openshift you define several resources (API Objects) and you can start an environment. So multi environment means multi similar resources sets. To manage multi environment, you have many options, such as:
+
+- Via labels and unique naming within a single project
+- Via distinct projects within a cluster
+- Via distinct clusters
+
+Consider your situation in your organization and choose one properly. We'll try the second one as an example. We'll develop a way to share the image created in the project (can be called as dev project).
+
+- Spend some time thinking about which resources you will need for another environment (ImageStream DeploymentConfig Service Route PersistentVolumeClaim)
+
+- Tag all the resources to export by
+
+  ```
+  oc label dc/mongodb promotion=nodejs-ex
+  oc label dc/nodejs-ex promotion=nodejs-ex
+  oc label svc/nodejs-ex promotion=nodejs-ex
+  oc label svc/mongodb promotion=nodejs-ex
+  oc label routes/nodejs-ex promotion=nodejs-ex
+  oc label pvc/mongodb promotion=nodejs-ex
+  oc label is/nodejs-ex promotion=nodejs-ex
+  oc label secret/nodejs-ex promotion=nodejs-ex
+  ```
+
+- Export those resources
+
+  `oc export dc,svc,routes,pvc,is,secret -l promotion=nodejs-ex -o yaml > exported-for-promotion.yaml`
+
+- Open the exported file do the below:
+
+  + Remove image hash tag
+  + Replace all string `test1` to `test1-sys` and we're creating a project named `test1-sys`
+  + Remove `annotations` `volumeName` `status` `creationTimestamp` from `PersistentVolumeClaim`
+
+- Create a new project by `oc new-project test1-sys`
+
+- Create resources by `oc create -f exported-for-promotion.yaml`
+
+- Tag an image from test1
+  
+  `oc tag test1/nodejs-ex:latest nodejs-ex:latest`
+
+- After that you can trigger a deployment, and after it succeeded, you will be able to open the application in `sys` environment
+
+- Try create a template for these resources and then you can create any new environment with one command
+
 
 Logging, Monitoring, Debugging
 ----------------------------------
 
 ### Logging aggregation
 
+- EFK solution, check a video [here](https://www.youtube.com/watch?v=RMDX3YC0CSQ)
+
 ### Monitoring solutions
+
+- Prometheus/zabbix/hawk: https://github.com/openshift/openshift-tools/tree/stg/openshift_tools/monitoring
+- dynatrace/coscale/sysdig/appdynamics
 
 ### Debugging
 
-
-
+- To monitor the change of resources: `watch oc get all`
+- Check logs of pods: `oc logs po/nodejs-ex-1-0s5sl`
+- Check events: `oc get event`
+- Login to container: `oc rsh po/nodejs-ex-1-0s5sl`
 
 
 
