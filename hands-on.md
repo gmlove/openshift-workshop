@@ -173,7 +173,7 @@ Add mongodb to the application
 
 - crete secret
 
-  `oc create -f mongodb-secrets.json`
+  `oc create -f mongodb-secrets.yaml`
   
 - checkout secret
 
@@ -181,7 +181,7 @@ Add mongodb to the application
   
 - Create persistent volume claim
 
-  `oc create -f mongodb-pvc.json`
+  `oc create -f mongodb-pvc.yaml`
 
 - Check persistent volume claim
 

@@ -72,9 +72,9 @@ Don't need application to be a 12-factor application. Any application can be mig
 
 **Through command line:**
 
-- Create secrets by `oc create -f mongodb-secrets.json`
+- Create secrets by `oc create -f mongodb-secrets.yaml`
 - Check created secrets by `oc get secrets` and `oc describe secret nodejs-ex`
-- Create persistent volumn claim by `oc create -f mongodb-pvc.json` and check by `oc get pvc`
+- Create persistent volumn claim by `oc create -f mongodb-pvc.yaml` and check by `oc get pvc`
 - Create mongodb deployment config by `oc create -f mongodb-deploy-config.yaml`
 - Create a mongodb service by `oc create -f mongodb-service.yaml`
 - Trigger a deployment for mongodb by `oc rollout latest dc/mongodb`
