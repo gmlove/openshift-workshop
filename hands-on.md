@@ -18,11 +18,11 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
 - fork [the demo project](https://github.com/openshift/nodejs-ex) to your own github account and get the repository url:
  
- > https://github.com/\\<your-github-name\>/nodejs-ex.git
+ > https://github.com/\<your-github-name\>/nodejs-ex.git
  
 - clone code  
 
-  `git clone https://github.com/\<your-github-name\>/nodejs-ex.git`
+  `git clone https://github.com/<your-github-name>/nodejs-ex.git`
   
 - clone configuration files
 
