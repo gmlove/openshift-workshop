@@ -248,6 +248,8 @@ CI/CD for the application
 - Keep the original pipeline and artifact repository. Manage your pipeline outside of openshift world. When you need to deploy to an environment, you can trigger a build in openshift to grab your artifact and build an image and deploy it to openshift.
 - Use openshift integrated Jenkins as your pipeline. (heavily customized, with openshift plugin and k8s plugin installed.)
 
+![Openshift Pipeline Structure](./pipeline-structure.png)
+
 ### Integrate Jenkins with the application
 
 - Create a pipeline build config
