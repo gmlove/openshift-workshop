@@ -32,7 +32,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
 - log on to OpenShift web console
 
-  In browser, navigate to `https://192.168.99.100:8443` and login with any username and password you'd like to use. OpenShift will create that account for you.
+  In browser, navigate to `https://13.228.41.255:8443` and login with any username and password you'd like to use. OpenShift will create that account for you.
 
 ### Login
 - `oc login -u <your-username>`  and input password `<your-password>`, you'll see:
@@ -65,7 +65,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
   `oc project`
   
-  > Using project "testproject" on server "https://192.168.99.100:8443".
+  > Using project "testproject" on server "https://13.228.41.255:8443".
   
 - check all projects
 
@@ -98,7 +98,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
   > your route url should look like this: 
   
-  > nodejs-ex-testproject.192.168.99.100.nip.io
+  > nodejs-ex-testproject.13.228.41.255.nip.io
   
 - check out the url in web browser you'll see the welcome page
   
