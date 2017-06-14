@@ -208,26 +208,26 @@ Add mongodb to the application
   `oc edit dc/nodejs-ex`  and add the following lines:
   
   ```yaml
-        env:
-          - name: DATABASE_SERVICE_NAME
-            value: mongodb
-          - name: MONGODB_USER
-            valueFrom:
-              secretKeyRef:
-                key: database-user
-                name: nodejs-ex
-          - name: MONGODB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-password
-                name: nodejs-ex
-          - name: MONGODB_DATABASE
-            value: sampledb
-          - name: MONGODB_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-admin-password
-                name: nodejs-ex
+          env:
+            - name: DATABASE_SERVICE_NAME
+              value: mongodb
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: nodejs-ex
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: nodejs-ex
+            - name: MONGODB_DATABASE
+              value: sampledb
+            - name: MONGODB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-admin-password
+                  name: nodejs-ex
   ```
   
 - Trigger a deployment for nodejs-ex
