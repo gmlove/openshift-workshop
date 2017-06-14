@@ -35,7 +35,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   In browser, navigate to `https://13.228.41.255:8443` and login with any username and password you'd like to use. OpenShift will create that account for you.
 
 ### Login
-- `oc login -u <your-username>`  and input password `<your-password>`, you'll see:
+- `oc login https://13.228.41.255:8443`  and input your username and password:
 
  > Authentication required for https://13.228.41.255:8443 (openshift) 
  >
