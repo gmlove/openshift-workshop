@@ -98,7 +98,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
   > your route url should look like this: 
   
-  > nodejs-ex-testproject.13.228.41.255.nip.io
+  > nodejs-ex-testproject.13.228.41.255.xip.io
   
 - check out the url in web browser you'll see the welcome page
   
@@ -236,7 +236,7 @@ Add mongodb to the application
 
 - Check
 
-  In you browser, open the application with url `nodejs-ex-testproject.192.168.99.100.nip.io`, and check the `Page view count` in the web page, it should be counting.
+  In you browser, open the application with url `nodejs-ex-testproject.13.228.41.255.xip.io`, and check the `Page view count` in the web page, it should be counting.
 
 
 
