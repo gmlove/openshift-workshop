@@ -37,7 +37,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 ### Login
 - `oc login -u <your-username>`  and input password `<your-password>`, you'll see:
 
- > Authentication required for https://192.168.99.100:8443 (openshift) 
+ > Authentication required for https://13.228.41.255:8443 (openshift) 
  >
  > Username: <your-username> 
  > 
@@ -207,27 +207,27 @@ Add mongodb to the application
 
   `oc edit dc/nodejs-ex`  and add the following lines:
   
-  ```
-  env:
+  ```yaml
+        env:
           - name: DATABASE_SERVICE_NAME
             value: mongodb
           - name: MONGODB_USER
             valueFrom:
               secretKeyRef:
                 key: database-user
-                name: nodejs-mongo-persistent
+                name: nodejs-ex
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
-                name: nodejs-mongo-persistent
+                name: nodejs-ex
           - name: MONGODB_DATABASE
             value: sampledb
           - name: MONGODB_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-admin-password
-                name: nodejs-mongo-persistent
+                name: nodejs-ex
   ```
   
 - Trigger a deployment for nodejs-ex
