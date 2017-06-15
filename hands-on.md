@@ -89,12 +89,13 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   `oc get route` 
 
   > your route url should look like this: 
-
+  >
   > nodejs-ex-\<your-project-name\>.13.228.41.255.xip.io
 
 - check out the url in web browser you'll see the welcome page
 
 ### Build & deploy
+
 - build
 
   `oc start-build nodejs-ex`
