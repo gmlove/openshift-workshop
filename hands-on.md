@@ -446,6 +446,7 @@ Logging, Monitoring, Debugging
 - Prometheus/zabbix/hawk: https://github.com/openshift/openshift-tools/tree/stg/openshift_tools/monitoring
   
   An example to setup prometheus and grafana: https://github.com/debianmaster/openshift-examples/tree/master/promethus
+  We created a monitor service already: http://grafana-openshift-infra.13.228.41.255.xip.io (admin:admin)
 
 - dynatrace/coscale/sysdig/appdynamics
 
