@@ -207,11 +207,11 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
           ports:
             - containerPort: 8080
               protocol: TCP
-        **resources:**
-          **limits:**
-            **cpu: 100m**
-          **requests:**
-            **cpu: 100m**
+          resources:
+            limits:
+            cpu: 100m
+          requests:
+            cpu: 100m
           terminationMessagePath: /dev/termination-log
           imagePullPolicy: Always
       restartPolicy: Always
