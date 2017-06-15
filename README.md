@@ -48,11 +48,11 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 ### Login
 - `oc login https://13.228.41.255:8443`  and input your username and password:
 
- > Authentication required for https://13.228.41.255:8443 (openshift) 
- >
- > Username: <your-username> 
- >
- > Password: <your-password>
+  > Authentication required for https://13.228.41.255:8443 (openshift) 
+  >
+  > Username: <your-username> 
+  >
+  > Password: <your-password>
 
 - check status
 
@@ -199,45 +199,49 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
   - edit DeployConfig in web console
 
-  `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
+    `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
 
-  replace `resources:{}` with the following content:
+    replace `resources:{}` with the following content:
 
-  ```yaml
-  resources:
-    limits:
-      cpu: 100m
-    requests:
-      cpu: 100m
-  ```
+    ```yaml
+    resources:
+      limits:
+        cpu: 100m
+      requests:
+        cpu: 100m
+    ```
 
-  and the yaml script will looks like this:
+    and the yaml script will looks like this:
 
-  ```yaml
-    spec:
-      containers:
-        - name: nodejs-ex
-          image: >-
-            172.30.1.1:5000/leojiangproject/nodejs-ex@sha256:eac764a3e2366e929dd00e8558d9433d3f81bf590e09340527a8e839cf0fe551
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          resources:
-            limits:
-              cpu: 100m
-            requests:
-              cpu: 100m
-          terminationMessagePath: /dev/termination-log
-          imagePullPolicy: Always
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: {}
-  ```
+   ```yaml
+      spec:
+        containers:
+          - name: nodejs-ex
+            image: >-
+              172.30.1.1:5000/leojiangproject/nodejs-ex@sha256:eac764a3e2366e929dd00e8558d9433d3f81bf590e09340527a8e839cf0fe551
+            ports:
+              - containerPort: 8080
+                protocol: TCP
+            resources:
+              limits:
+                cpu: 100m
+              requests:
+                cpu: 100m
+            terminationMessagePath: /dev/termination-log
+            imagePullPolicy: Always
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+    ```
 
-  back to `overview` in web console, you'll see an error at the top, 
+    Back to `overview` in web console, you'll see an error at the top, click on the url and trust the site.
+    
+    Now you can see metrics in `overview` panel.
 
-  - config autoscaler with comamnd: `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
+  - config autoscaler with command
+  
+    `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
 
   - verify
 
