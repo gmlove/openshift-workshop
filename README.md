@@ -76,7 +76,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
   `oc project`
 
-  > Using project "<your-project-name>" on server "https://13.228.41.255:8443".
+  > Using project "\<your-project-name\>" on server "https://13.228.41.255:8443".
 
 - check all projects
 
@@ -109,7 +109,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
   > your route url should look like this: 
 
-  > nodejs-ex-<your-project-name>.13.228.41.255.xip.io
+  > nodejs-ex-\<your-project-name\>.13.228.41.255.xip.io
 
 - check out the url in web browser you'll see the welcome page
 
