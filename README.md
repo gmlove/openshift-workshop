@@ -115,25 +115,48 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   `oc deploy --latest dc/nodejs-ex`
   
   > A deployment will be triggered automatically when a build is finished successfully.
+
+### Add Webhook
+
+- Copy webhook url
+  
+  In OpenShift web console, go to `Builds` -> click `<your-build-config-name>` -> switch to `Configuraton` tab ->
+  copy the url on the right of `GitHub Webhook URL:`
+
+- Config Webhook in github
+  
+  - Go to web browser with url: `https://github.com/<your-github-name>/nodejs-ex.git`
+  
+  - Switch to `Settings` tab below the project name
+
+  - Click `Webhooks` item in left menu panel and then Click `Add Webhook` button
+
+  - Paste the webhook URL in field `Payload URL`, select `application/json` in `Content type` field, click `disable ssl verification`
+
+  - Click `Add webhook` at the bottom and you'll return to previous page
+
+  - Github will test the webhook automatically, if succeed, it will place a green mark before the url.
+
+  - done
+
+- Vefiry Webhook
+
+  - modify code and commit your changes
+
+    modify \<code-dir\>/nodejs-ex/views/index.html line 219
+  
+    `Welcome to your Node.js` to `This is my awesome Node.js`
+    
+    push your changes to github
+  
+  - check your changes in web browser
+
+    in OpenShift web console you'll see a build & deployment is triggered automatically
+
+    you'll see the tilte of the page changed from `Welcome to your Node.js` to `This is my awesome Node.js` afterh the app is re-deployed.
   
 ### Rollback
 
-- modify code and commit your changes
-
-  modify \<code-dir\>/nodejs-ex/views/index.html line 219
-  
-  `Welcome to your Node.js` to `This is my awesome Node.js`
-  
-- rebuild & redeploy
-
-  start a new build with `oc start-build nodejs-ex`
-  
-  > no need to start a deployment manually here as mentioned in previous section
-  
-- check your changes in web browser
-
-  you'll see the tilte of the page changed from `Welcome to your Node.js` to `This is my awesome Node.js`
-  
 - rollback to the last successful deployment
 
   `oc rollback dc/nodejs-ex` or `oc rollout undo dc/nodejs-ex`
@@ -146,9 +169,9 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
   The message means after a build finished, OpenShift will no longer trigger an aotumatic deployment. You can re-enable it use the command given in the message if you would like to.
   
-- rollback to specified deploy
-
-  `oc rollout undo dc/nodejs-ex --to-revision=1` or `oc rollback nodejs-ex --to-version=1`
+  > You can also rollback to a specified deployment with the following comman:
+  >
+  > `oc rollout undo dc/nodejs-ex --to-revision=1` or `oc rollback nodejs-ex --to-version=1`
 
 ### Scale up/down
 - scale manually
