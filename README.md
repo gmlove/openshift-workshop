@@ -16,20 +16,31 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
 ### Preparation
 
+- Instanll ```oc``` in your mac:
+
+  ```
+  brew update 
+  brew install openshift-cli
+  oc version                     # the version should be oc v1.5.1+7b451fc
+  ```
+
+  You can also download it's here: <https://github.com/openshift/origin/releases/download/v1.5.1/openshift-origin-client-tools-v1.5.1-7b451fc-mac.zip>
+
+
 - fork [the demo project](https://github.com/openshift/nodejs-ex) to your own github account and get the repository url:
- 
+
   `https://github.com/<your-github-name>/nodejs-ex.git`
- 
+
 - clone code  
 
   `git clone https://github.com/<your-github-name>/nodejs-ex.git`
-  
+
 - clone configuration files
 
   `git clone https://github.com/gmlove/openshift-workshop.git`
-  
+
   Files in this repo will be used later.
-  
+
 - log on to OpenShift web console
 
   In browser, navigate to `https://13.228.41.255:8443` and login with any username and password you'd like to use. OpenShift will create that account for you.
@@ -40,7 +51,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
  > Authentication required for https://13.228.41.255:8443 (openshift) 
  >
  > Username: <your-username> 
- > 
+ >
  > Password: <your-password>
 
 - check status
@@ -49,84 +60,84 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   > You don't have any projects. You can try to create a new project, by running
   >
   > oc new-project <projectname>
-  
+
 - check project
-  
+
   `oc project`
   > No project has been set. Pass a project name to make that the default.
-  
+
 ### Create project
 
 - create a new project
 
   `oc new-project testproject`
-  
+
 - check the current project on which you're working
 
   `oc project`
-  
+
   > Using project "testproject" on server "https://13.228.41.255:8443".
-  
+
 - check all projects
 
   `oc  get projects`
-  
+
 ### Create applicatioin
 
 - create a new application with your own git repository url
-  
+
   `oc new-app https://github.com/<your-github-name>/nodejs-ex.git`
-  
+
   > you can specify the application name with a parameter `--name <application-name>`
-  
+
 - check status
 
   get project status : `oc status` 
-  
+
   get all resources: `oc get all`
- 
-  
+
+
 ### Create route
 
 - expose service
-  
+
   `oc expose service/nodejs-ex`
 
 - get route url
 
   `oc get route` 
-  
+
   > your route url should look like this: 
-  
+
   > nodejs-ex-testproject.13.228.41.255.xip.io
-  
+
 - check out the url in web browser you'll see the welcome page
-  
-  
+
+  ​
 ### Build & deploy
 - build
 
   `oc start-build nodejs-ex`
-  
+
     > A build will be triggered automatically once the application is created successfully.
-  
+
 - deploy  
 
   `oc deploy --latest dc/nodejs-ex`
-  
+
   > A deployment will be triggered automatically when a build is finished successfully.
 
 ### Add Webhook
 
 - Copy webhook url
-  
+
   In OpenShift web console, go to `Builds` -> click `<your-build-config-name>` -> switch to `Configuraton` tab ->
   copy the url on the right of `GitHub Webhook URL:`
 
 - Config Webhook in github
-  
+
   - Go to web browser with url: `https://github.com/<your-github-name>/nodejs-ex.git`
-  
+
   - Switch to `Settings` tab below the project name
 
   - Click `Webhooks` item in left menu panel and then Click `Add Webhook` button
@@ -144,31 +155,31 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   - modify code and commit your changes
 
     modify \<code-dir\>/nodejs-ex/views/index.html line 219
-  
+
     `Welcome to your Node.js` to `This is my awesome Node.js`
-    
+
     push your changes to github
-  
+
   - check your changes in web browser
 
     in OpenShift web console you'll see a build & deployment is triggered automatically
 
     you'll see the tilte of the page changed from `Welcome to your Node.js` to `This is my awesome Node.js` afterh the app is re-deployed.
-  
+
 ### Rollback
 
 - rollback to the last successful deployment
 
   `oc rollback dc/nodejs-ex` or `oc rollout undo dc/nodejs-ex`
-  
+
   you'll get the following messages:
-  
+
   >  Warning: the following images triggers were disabled: nodejs-ex:latest
   >
   >  You can re-enable them with: oc set triggers dc/nodejs-ex --auto
-  
+
   The message means after a build finished, OpenShift will no longer trigger an aotumatic deployment. You can re-enable it use the command given in the message if you would like to.
-  
+
   > You can also rollback to a specified deployment with the following comman:
   >
   > `oc rollout undo dc/nodejs-ex --to-revision=1` or `oc rollback nodejs-ex --to-version=1`
@@ -177,21 +188,21 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 - scale manually
 
   scale up to 2 pods
-  
+
    `oc scale dc/nodejs-ex --replicas=2`
-  
+
   now you can scale down to 1 pod
-  
+
   `oc scale dc/nodejs-ex --replicas=1`
-  
+
 - autoscaling
 
   - edit DeployConfig in web console
-  
+
   `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
-  
+
   replace `resources:{}` with the following content:
-  
+
   ```yaml
   resources:
     limits:
@@ -199,9 +210,9 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
     requests:
       cpu: 100m
   ```
-  
+
   and the yaml script will looks like this:
-  
+
   ```yaml
     spec:
       containers:
@@ -223,15 +234,15 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
       dnsPolicy: ClusterFirst
       securityContext: {}
   ```
-  
+
   back to `overview` in web console, you'll see an error at the top, 
-  
+
   - config autoscaler with comamnd: `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
 
   - verify
-    
+
     send batch request with command: `ab -n 1000 -c 100 http://<route-of-your-application>`
-    
+
     Wait and you'll see the pod number is scaled to 2
 
 Add mongodb to the application
@@ -243,11 +254,11 @@ Add mongodb to the application
 - crete secret
 
   `oc create -f mongodb-secrets.yaml`
-  
+
 - checkout secret
 
   `oc describe secret nodejs-ex`
-  
+
 - Create persistent volume claim
 
   `oc create -f mongodb-pvc.yaml`
@@ -267,15 +278,15 @@ Add mongodb to the application
 - Trigger a deployment for mongodb
 
   `oc rollout latest dc/mongodb`
-  
+
 ### Connect nodejs application to database
 
 - Change deployment config and add environment parameters
 
   In web console, go to `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
-  
+
   add the following content under `caontaners` tag:
-  
+
   ```yaml
           env:
             - name: DATABASE_SERVICE_NAME
@@ -298,9 +309,9 @@ Add mongodb to the application
                   key: database-admin-password
                   name: nodejs-ex
   ```
-  
+
   the resulting yaml script will looks like this:
-  
+
   ```yaml
     spec:
       containers:
@@ -326,7 +337,7 @@ Add mongodb to the application
                   key: database-admin-password
                   name: nodejs-ex
   ```
-  
+
 - Trigger a deployment for nodejs-ex
 
   `oc rollout latest dc/nodejs-ex`
@@ -417,7 +428,7 @@ Consider your situation in your organization and choose one properly. We'll try 
 - Create resources by `oc create -f exported-for-promotion.yaml`
 
 - Tag an image from test1
-  
+
   `oc tag test1/nodejs-ex:latest nodejs-ex:latest`
 
 - After that you can trigger a deployment, and after it succeeded, you will be able to open the application in `sys` environment
