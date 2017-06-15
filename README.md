@@ -184,12 +184,25 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
   `oc scale dc/nodejs-ex --replicas=1`
   
-- config autoscaling
+- autoscaling
 
-  `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=80`
+  - edit DeployConfig with following content
   
-  > You need to configure Metrics first. That is not easy, so we're not going    to do that today.
+  ```yaml
+  resources:
+    limits:
+      cpu: 100m
+    requests:
+      cpu: 100m
+  ```
+  
+  - config autoscaler with comamnd: `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
 
+  - verify
+    
+    send batch request with command: `ab -n 1000 -c 100 http://<route-of-your-application>`
+    
+    Wait and refresh your web console, you'll see the pod number is scaled to 2
 
 Add mongodb to the application
 ---------------------------------
@@ -228,7 +241,7 @@ Add mongodb to the application
 
 - Change deployment config and add environment parameters
 
-  `oc edit dc/nodejs-ex`  and add the following lines:
+  Go to web console edit DeployConfig or use command `oc edit dc/nodejs-ex`  and add the following lines:
   
   ```yaml
           env:
