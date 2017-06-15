@@ -68,19 +68,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
 ### Create project
 
-- create a new project
-
   `oc new-project <your-project-name>`
-
-- check the current project on which you're working
-
-  `oc project`
-
-  > Using project "\<your-project-name\>" on server "https://13.228.41.255:8443".
-
-- check all projects
-
-  `oc  get projects`
 
 ### Create applicatioin
 
@@ -89,13 +77,6 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   `oc new-app https://github.com/<your-github-name>/nodejs-ex.git`
 
   > you can specify the application name with a parameter `--name <application-name>`
-
-- check status
-
-  get project status : `oc status` 
-
-  get all resources: `oc get all`
-
 
 ### Create route
 
@@ -259,33 +240,33 @@ Add mongodb to the application
 
   `oc create -f mongodb-secrets.yaml`
 
-- checkout secret
+- check secret
 
   `oc describe secret nodejs-ex`
 
-- Create persistent volume claim
+- create persistent volume claim
 
   `oc create -f mongodb-pvc.yaml`
 
-- Check persistent volume claim
+- check persistent volume claim
 
   `oc get pvc`
 
-- Create mongodb deployment config
+- create mongodb deployment config
 
   `oc create -f mongodb-deploy-config.yaml`
 
-- Create a mongodb service
+- create a mongodb service
 
   `oc create -f mongodb-service.yaml`
 
-- Trigger a deployment for mongodb
+- trigger a deployment for mongodb (if not triggered automatically)
 
   `oc rollout latest dc/mongodb`
 
 ### Connect nodejs application to database
 
-- Change deployment config and add environment parameters
+- change deployment config and add environment parameters
 
   In web console, go to `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
 
@@ -342,11 +323,11 @@ Add mongodb to the application
                   name: nodejs-ex
   ```
 
-- Trigger a deployment for nodejs-ex
+- trigger a deployment for nodejs-ex
 
   `oc rollout latest dc/nodejs-ex`
 
-- Check
+- check
 
   In you browser, open the application with url `nodejs-ex-testproject.13.228.41.255.xip.io`, and check the `Page view count` in the web page, it should be counting.
 
