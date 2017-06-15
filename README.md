@@ -186,7 +186,11 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
 - autoscaling
 
-  - edit DeployConfig in web console with following content(`Applications` -> <your-deploy-config-name> -> `Action` menu -> `Edit YAML`
+  - edit DeployConfig in web console
+  
+  `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
+  
+  replace `resources:{}` with the following content:
   
   ```yaml
   resources:
@@ -209,9 +213,9 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
               protocol: TCP
           resources:
             limits:
-            cpu: 100m
-          requests:
-            cpu: 100m
+              cpu: 100m
+            requests:
+              cpu: 100m
           terminationMessagePath: /dev/termination-log
           imagePullPolicy: Always
       restartPolicy: Always
@@ -220,18 +224,21 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
       securityContext: {}
   ```
   
+  back to `overview` in web console, you'll see an error at the top, 
+  
   - config autoscaler with comamnd: `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
 
   - verify
     
     send batch request with command: `ab -n 1000 -c 100 http://<route-of-your-application>`
     
-    Wait and refresh your web console, you'll see the pod number is scaled to 2
+    Wait and you'll see the pod number is scaled to 2
 
 Add mongodb to the application
 ---------------------------------
 
 ### Deploy a database with persistent volume
+- `cd` to the directory where you downloaded the scritps of `https://github.com/gmlove/openshift-workshop.git` earlier.
 
 - crete secret
 
@@ -265,9 +272,39 @@ Add mongodb to the application
 
 - Change deployment config and add environment parameters
 
-  Go to web console edit DeployConfig or use command `oc edit dc/nodejs-ex`  and add the following lines:
+  In web console, go to `Applications` -> `Deployment` -> `\<your-deploy-config-name> -> `Action` menu -> `Edit YAML`
+  
+  add the following content under `caontaners` tag:
   
   ```yaml
+          env:
+            - name: DATABASE_SERVICE_NAME
+              value: mongodb
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: nodejs-ex
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: nodejs-ex
+            - name: MONGODB_DATABASE
+              value: sampledb
+            - name: MONGODB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-admin-password
+                  name: nodejs-ex
+  ```
+  
+  the resulting yaml script will looks like this:
+  
+  ```yaml
+    spec:
+      containers:
+        - name: nodejs-ex
           env:
             - name: DATABASE_SERVICE_NAME
               value: mongodb
