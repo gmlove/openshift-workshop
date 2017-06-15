@@ -1,4 +1,4 @@
-This is for our openshift workshop.
+This is all the materials used in our openshift workshop.
 
 ## File Structure
 
