@@ -113,7 +113,6 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
 
 - check out the url in web browser you'll see the welcome page
 
-  ​
 ### Build & deploy
 - build
 
@@ -253,7 +252,8 @@ Add mongodb to the application
 ---------------------------------
 
 ### Deploy a database with persistent volume
-- `cd` to the directory where you downloaded the scritps of `https://github.com/gmlove/openshift-workshop.git` earlier.
+
+- `cd` to the directory where you downloaded the configuration files earlier.
 
 - crete secret
 
