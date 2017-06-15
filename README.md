@@ -186,7 +186,7 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
   
 - autoscaling
 
-  - edit DeployConfig with following content
+  - edit DeployConfig in web console with following content(`Applications` -> <your-deploy-config-name> -> `Action` menu -> `Edit YAML`
   
   ```yaml
   resources:
@@ -194,6 +194,30 @@ In this section, We are going to create a nodejs project with mongodb in OpenShi
       cpu: 100m
     requests:
       cpu: 100m
+  ```
+  
+  and the yaml script will looks like this:
+  
+  ```yaml
+    spec:
+      containers:
+        - name: nodejs-ex
+          image: >-
+            172.30.1.1:5000/leojiangproject/nodejs-ex@sha256:eac764a3e2366e929dd00e8558d9433d3f81bf590e09340527a8e839cf0fe551
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+        **resources:**
+          **limits:**
+            **cpu: 100m**
+          **requests:**
+            **cpu: 100m**
+          terminationMessagePath: /dev/termination-log
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
   ```
   
   - config autoscaler with comamnd: `oc autoscale dc/nodejs-ex --min 1 --max 10 --cpu-percent=10`
